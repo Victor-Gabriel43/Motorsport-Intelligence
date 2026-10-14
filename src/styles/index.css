@@ -1,0 +1,159 @@
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "tailwindcss";
+
+/*
+ * APEX design tokens.
+ * Palette: deep black → graphite → metallic grey → paper white,
+ * with "Apex Red" as the single competition accent, used sparingly.
+ */
+@theme {
+  --color-ink: #08090a;
+  --color-carbon: #0e0f11;
+  --color-graphite: #15171a;
+  --color-steel: #1d2024;
+  --color-gunmetal: #2a2e33;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-mist: #7d828a;
+  --color-silver: #b4b8be;
+  --color-paper: #f2f1ee;
+  --color-apex: #dc1f29;
+  --color-apex-ink: #f23b44;
+  --color-apex-deep: #9d1219;
+  --color-signal: #e6b422;
+  --color-go: #3fae6a;
+
+  --font-sans: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --text-display: clamp(3rem, 9vw, 8.5rem);
+  --tracking-tightest: -0.045em;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 0.7s var(--ease-out-quint) both;
+  --animate-fade: fade 0.4s ease both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-ink text-paper font-sans antialiased;
+    font-variation-settings: "wdth" 100;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-apex);
+    color: white;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-apex);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  /* Grid tracks never grow past their column because of wide children (tables, long names). */
+  .grid > * {
+    min-width: 0;
+  }
+  /* Density preference (My Apex → Preferências). */
+  [data-density="compact"] .density-row { padding-block: 0.45rem; }
+
+  [data-reduce-motion="true"] *,
+  [data-reduce-motion="true"] *::before,
+  [data-reduce-motion="true"] *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Expanded, heavy editorial display face. */
+  .display {
+    font-variation-settings: "wdth" 125;
+    font-weight: 800;
+    letter-spacing: var(--tracking-tightest);
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+  .display-condensed {
+    font-variation-settings: "wdth" 72;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .wide {
+    font-variation-settings: "wdth" 115;
+  }
+  .kicker {
+    @apply font-mono text-[0.68rem] uppercase tracking-[0.18em] text-mist;
+  }
+  .meta {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.08em] text-silver;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Hairline technical grid used behind plates and heroes. */
+  .tech-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-graphite) 0%, var(--color-steel) 50%, var(--color-graphite) 100%);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+  .link-underline {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.35s var(--ease-out-quint);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
